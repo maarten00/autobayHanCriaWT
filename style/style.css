@@ -95,6 +95,10 @@ nav {
 	float: left;
 }
 
+.controlPanel{
+	display:none;
+}
+
 footer{
 	width: 1000px;
 	clear: left;
