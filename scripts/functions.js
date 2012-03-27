@@ -13,19 +13,19 @@ function getXmlHttpRequestObject() {
 }
 
 function attachHandlers() {
-	$("#homeBtn").click( function() {
+	$("#homeBtn").click(function() {
 		goToHomePage();
 	});
-	$("#loginBtn").click( function() {
+	$("#loginBtn").click(function() {
 		$('.login-form').slideToggle('slow');
 	});
-	$("#carSelectBtn").click( function() {
+	$("#carSelectBtn").click(function() {
 		goToCarSearch();
 	});
-	$("#allCarsBtn").click( function() {
+	$("#allCarsBtn").click(function() {
 		goToAllCars();
 	})
-	$("#controlPanelBtn").click( function() {
+	$("#controlPanelBtn").click(function() {
 		goToControlPanel();
 	})
 }
@@ -35,6 +35,7 @@ function closeAllDivs() {
 	$('.allCars').hide();
 	$('.carViewer').hide();
 	$('.homeText').hide();
+	$('.controlPanel').hide();
 }
 
 function goToHomePage() {
@@ -58,7 +59,7 @@ function goToAllCars() {
 function goToControlPanel() {
 	closeAllDivs();
 	$('.controlPanel').show();
-	generateControlPanel();
+	getAllReservationsRequest();
 }
 
 function getBrandsRequest() {
@@ -129,6 +130,40 @@ function getCarResponse() {
 	}
 }
 
+function getAllReservationsRequest() {
+	getAllReservations = getXmlHttpRequestObject();
+	if(getAllReservations.readyState == 4 || getAllReservations.readyState == 0) {
+		var params = "method=getAllReservations";
+		getAllReservations.open("GET", 'backend/getReservations.php?' + params, true);
+		getAllReservations.onreadystatechange = getAllReservationsResponse
+		getAllReservations.send(null);
+	}
+}
+
+function getAllReservationsResponse() {
+	if(getAllReservations.readyState == 4) {
+		var responseArray = eval("(" + getAllReservations.responseText + ")");
+		generateControlPanel(responseArray);
+	}
+}
+
+function getCarReservationsRequest(carId) {
+	getCarReservations = getXmlHttpRequestObject();
+	if(getCarReservations.readyState == 4 || getCarReservations.readyState == 0) {
+		var params = "method=getCarReservations&carId=" + carId;
+		getCarReservations.open("GET", 'backend/getReservations.php?' + params, true);
+		getCarReservations.onreadystatechange = getCarReservationsResponse
+		getCarReservations.send(null);
+	}
+}
+
+function getCarReservationsResponse() {
+	if(getCarReservations.readyState == 4) {
+		var responseArray = eval("(" + getCarReservations.responseText + ")");
+		generateCarReservationsTable(responseArray);
+	}
+}
+
 function generateSelectBox(inputData, type) {
 	if(type == "brand") {
 		$("#brandSelector").remove();
@@ -138,7 +173,7 @@ function generateSelectBox(inputData, type) {
 		for(i in inputData) {
 			brandList.append('<option value="' + inputData[i]["Merk"] + '">' + inputData[i]["Merk"] + '</option>');
 		}
-		$("#brandSelector").change( function() {
+		$("#brandSelector").change(function() {
 			getModelsRequest($("#brandSelector").val());
 		});
 	}
@@ -163,7 +198,7 @@ function generateCarList(inputData) {
 		$tdMerk.append(inputData[i]["merk"]);
 		$tdType.append(inputData[i]["type"]);
 		$tdBouwjaar.append(inputData[i]["bouwjaar"]);
-		$tr.click( function() {
+		$tr.click(function() {
 			getCarRequest(this.id);
 		})
 	}
@@ -184,10 +219,44 @@ function generateCarView(inputData) {
 		$carDetails.append("Kleur: " + inputData[i]["kleur"] + "<br />");
 		$carImg = $("<img id='carImg' src='images/auto" + inputData[i]["id"] + ".jpg' alt='carImg'/>");
 		$carViewer.append($carImg);
+		getCarReservationsRequest(inputData[i]["id"]);
 	}
+
 }
 
+function generateCarReservationsTable(inputData) {
+		$carViewer = $('.carViewer');
+		$carReservationsTable = $('<table id="carReservationsTable"><th>Prijs</th><th>Naam</th><th>Telefoonnummer</th><th>Tijd En Datum</th></table>');
+		$carReservationsTable.appendTo($carViewer);
+		for(i in inputData) {
+			$tr = $("<tr id='" + inputData[i]["carId"] + "'></tr>").appendTo($carReservationsTable);
+			$tdPrijs = $("<td></td>").appendTo($tr);
+			$tdNaam = $("<td></td>").appendTo($tr);
+			$tdTelefoonnummer = $("<td></td>").appendTo($tr);
+			$tdDatum = $("<td></td>").appendTo($tr);
+			$tdPrijs.append(inputData[i]["price"]);
+			$tdNaam.append(inputData[i]["name"]);
+			$tdTelefoonnummer.append(inputData[i]["telephone"]);
+			$tdDatum.append(inputData[i]["time"]);
+		}
+}
 
-function generateControlPanel(){
-	generatePanel();
+function generateControlPanel(inputData) {
+	$('#reservationsTable').find("tr:gt(0)").remove();
+	for(i in inputData) {
+		$tr = $("<tr id='" + inputData[i]["carId"] + "'></tr>").appendTo($('#reservationsTable'));
+		$tdAutoId = $("<td></td>").appendTo($tr);
+		$tdPrijs = $("<td></td>").appendTo($tr);
+		$tdNaam = $("<td></td>").appendTo($tr);
+		$tdTelefoonnummer = $("<td></td>").appendTo($tr);
+		$tdDatum = $("<td></td>").appendTo($tr);
+		$tdAutoId.append(inputData[i]["carId"]);
+		$tdPrijs.append(inputData[i]["price"]);
+		$tdNaam.append(inputData[i]["name"]);
+		$tdTelefoonnummer.append(inputData[i]["telephone"]);
+		$tdDatum.append(inputData[i]["time"]);
+		$tr.click(function() {
+			getCarRequest(this.id);
+		})
+	}
 }

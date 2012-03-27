@@ -69,9 +69,12 @@ if(isset($_SESSION["myusername"])) {
 
 		</div>
 		<div class="carViewer">
+
 		</div>
 		<div class="controlPanel">
-			
+			<table id="reservationsTable">
+				<th>AutoId</th><th>Prijs</th><th>Naam</th><th>Telefoonnummer</th><th>Tijd En Datum</th>
+			</table>
 		</div>
 		<footer>
 			<p>
