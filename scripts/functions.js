@@ -166,21 +166,47 @@ function getCarReservationsResponse() {
 	}
 }
 
-function postCarReservationReq() {
+function postCarReservationReq(price, name, telephone, carId) {
 	postCarReservation = getXmlHttpRequestObject();
 	if(postCarReservation.readyState == 4 || postCarReservation.readyState == 0) {
-		var params = "method=postReservation";
-		postCarReservation.open("POST", 'backend/postReservation.php?' + params, true);
+		var params = "method=postReservation&price=" + price + "&name=" + name + "&telephone=" + telephone + "&carId=" + carId;
+		postCarReservation.open("POST", 'backend/postReservation.php?', true);
 		postCarReservation.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		postCarReservation.onreadystatechange = postCarReservationResponse
-		postCarReservation.send(null);
+		postCarReservation.send(params);
 	}
 }
 
 function postCarReservationResponse() {
 	if(postCarReservation.readyState == 4) {
-		
+
 	}
+}
+
+function validateReservation(price, name, telephone, carId) {
+	if(price == "" || price == null) {
+		alert("Geen prijs ingevuld!");
+	} else if(name == "" || name == null) {
+		alert("Geen naam ingevuld!");
+	} else if(telephone == "" || telephone == null) {
+		alert("Geen telefoonnummer ingevuld!");
+	} else {
+		postCarReservationReq(price, name, telephone, carId);
+	}
+}
+
+function generateCarReserveForm() {
+	$reserveCarDiv = $('<fieldset id="reserveCarDiv"><legend>Auto reserveren</legend>');
+	$carViewer.append($reserveCarDiv);
+	$form = $reserveCarDiv.append('<form id="reserveCar" onsubmit="validateReservation(this)">')
+	$priceInput = $form.append('Prijs: <input id="priceInput" type="number" placeholder="€"><br />');
+	$nameInput = $form.append('Naam: <input id="nameInput" type="text" placeholder="Naam"><br />');
+	$telephoneInput = $form.append('Telefoonnummer:<input id="telephoneInput" type="tel" placeholder="1234-123456">');
+	$submitBtn = $('<input type="submit" name="submit" value="Plaats Reservering">');
+	$form.append($submitBtn);
+	$submitBtn.click(function() {
+		validateReservation($('#priceInput').val(), $('#nameInput').val(), $('#telephoneInput').val(), $('#carId').text());
+	})
 }
 
 function generateSelectBox(inputData, type) {
@@ -230,6 +256,9 @@ function generateCarView(inputData) {
 	for(i in inputData) {
 		$carDetails = $("<div id='carDetails'>");
 		$carViewer.append($carDetails);
+		$carIdField = $('<input type="hidden" id="carId"></input>');
+		$carIdField.append(inputData[i]["id"]);
+		$carDetails.append($carIdField);
 		$carDetails.append("Merk: " + inputData[i]["merk"] + "<br />");
 		$carDetails.append("Type: " + inputData[i]["type"] + "<br />");
 		$carDetails.append("Brandstofsoort: " + inputData[i]["brandstof"] + "<br />");
@@ -244,21 +273,6 @@ function generateCarView(inputData) {
 			generateCarReserveForm();
 		}
 	}
-}
-
-function generateCarReserveForm() {
-	$reserveCarDiv = $('<fieldset id="reserveCarDiv"><legend>Auto reserveren</legend>');
-	$carViewer.append($reserveCarDiv);
-	$form = $reserveCarDiv.append('<form id="reserveCar" action="/backend/postReservation.php" method="post">')
-	$priceInput = $form.append('Prijs: <input name="price" type="number" placeholder="€"><br />');
-	$nameInput = $form.append('Naam: <input name="name" type="text" placeholder="Naam"><br />');
-	$telephoneInput = $form.append('Telefoonnummer:<input name="telephone" type="tel" placeholder="1234-123456">');
-	$submitBtn = $('<input type="submit" value="Plaats Reservering">');
-	$form.append($submitBtn);
-	$submitBtn.click(function() {
-		$form.submit();
-		postCarReservationReq();
-	})
 }
 
 function generateCarReservationsTable(inputData) {
