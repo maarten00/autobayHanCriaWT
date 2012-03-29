@@ -1,6 +1,6 @@
 <?
 session_start();
-if(isset($_SESSION["myusername"])) {
+if (isset($_SESSION["myusername"])) {
 	$myusername = $_SESSION["myusername"];
 }
 ?>
@@ -20,23 +20,27 @@ if(isset($_SESSION["myusername"])) {
 	<body onload="attachHandlers()">
 		<header>
 			<h1>Autobay</h1>
-			<?	if(checkLogin()) {
-					echo '<p class="loggedInMsg"> Ingelogd als: ';
-					echo $myusername;
-					echo '<br /><a href="backend/logout.php">Uitloggen</a></p>';
-				}?>
+			<?
+			if (checkLogin()) {
+				echo '<p class="loggedInMsg"> Ingelogd als: ';
+				echo $myusername;
+				echo '<br /><a href="backend/logout.php">Uitloggen</a></p>';
+			}
+			?>
+
+			<input type="hidden" name="loginValue" id="loginValue" value="<?php echo checkLogin();?>" />
 		</header>
 		<nav>
 			<a id="homeBtn">Home</a>
 			<a id=allCarsBtn>Alle Auto's</a>
 			<a id=carSelectBtn>Zoeken</a>
-			<?if(!checkLogin()) {
-	echo '
-			<a id="loginBtn">Inloggen</a>';
-} else {
-	echo '
-			<a id="controlPanelBtn">Beheerderspaneel</a>';
-}?>
+			<?
+			if (!checkLogin()) {
+				echo ' <a id="loginBtn">Inloggen</a>';
+			} else {
+				echo ' <a id="controlPanelBtn">Beheerderspaneel</a>';
+			}
+			?>
 		</nav>
 		<div id="content">
 			<div class='login-form'>
@@ -57,20 +61,15 @@ if(isset($_SESSION["myusername"])) {
 			sed cursus felis faucibus at. Maecenas sed leo nisi. Nulla facilisi.
 			Maecenas vulputate, massa non bibendum accumsan, lectus velit tincidunt tortor, a porta elit dolor ac urna.
 		</p>
-		<div class="carSelector">
-		</div>
-
+		<div class="carSelector"></div>
 		<div class="allCars">
 			<table id="carList">
 				<th>Merk</th>
 				<th>Type</th>
 				<th>Bouwjaar</th>
 			</table>
-
 		</div>
-		<div class="carViewer">
-
-		</div>
+		<div class="carViewer"></div>
 		<div class="controlPanel">
 			<table id="reservationsTable">
 				<th>AutoId</th><th>Prijs</th><th>Naam</th><th>Telefoonnummer</th><th>Tijd En Datum</th>
@@ -83,12 +82,12 @@ if(isset($_SESSION["myusername"])) {
 		</footer>
 	</body>
 </html>
-
 <?
 function checkLogin() {
-	if(isset($_SESSION["myusername"])) {
+	if (isset($_SESSION["myusername"])) {
 		return true;
 	} else {
 		return false;
 	}
-}?>
+}
+?>

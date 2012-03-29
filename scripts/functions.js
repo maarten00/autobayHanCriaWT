@@ -1,6 +1,7 @@
 /**
  * @author Maarten Kuiper
  */
+var loginValue;
 
 function getXmlHttpRequestObject() {
 	if(window.XMLHttpRequest) {
@@ -28,6 +29,7 @@ function attachHandlers() {
 	$("#controlPanelBtn").click(function() {
 		goToControlPanel();
 	})
+	loginValue = document.getElementById("loginValue").value;
 }
 
 function closeAllDivs() {
@@ -219,26 +221,28 @@ function generateCarView(inputData) {
 		$carDetails.append("Kleur: " + inputData[i]["kleur"] + "<br />");
 		$carImg = $("<img id='carImg' src='images/auto" + inputData[i]["id"] + ".jpg' alt='carImg'/>");
 		$carViewer.append($carImg);
-		getCarReservationsRequest(inputData[i]["id"]);
+		if(loginValue == "1") {
+			getCarReservationsRequest(inputData[i]["id"]);
+		}
 	}
 
 }
 
 function generateCarReservationsTable(inputData) {
-		$carViewer = $('.carViewer');
-		$carReservationsTable = $('<table id="carReservationsTable"><th>Prijs</th><th>Naam</th><th>Telefoonnummer</th><th>Tijd En Datum</th></table>');
-		$carReservationsTable.appendTo($carViewer);
-		for(i in inputData) {
-			$tr = $("<tr id='" + inputData[i]["carId"] + "'></tr>").appendTo($carReservationsTable);
-			$tdPrijs = $("<td></td>").appendTo($tr);
-			$tdNaam = $("<td></td>").appendTo($tr);
-			$tdTelefoonnummer = $("<td></td>").appendTo($tr);
-			$tdDatum = $("<td></td>").appendTo($tr);
-			$tdPrijs.append(inputData[i]["price"]);
-			$tdNaam.append(inputData[i]["name"]);
-			$tdTelefoonnummer.append(inputData[i]["telephone"]);
-			$tdDatum.append(inputData[i]["time"]);
-		}
+	$carViewer = $('.carViewer');
+	$carReservationsTable = $('<table id="carReservationsTable"><th>Prijs</th><th>Naam</th><th>Telefoonnummer</th><th>Tijd En Datum</th></table>');
+	$carReservationsTable.appendTo($carViewer);
+	for(i in inputData) {
+		$tr = $("<tr id='" + inputData[i]["carId"] + "'></tr>").appendTo($carReservationsTable);
+		$tdPrijs = $("<td></td>").appendTo($tr);
+		$tdNaam = $("<td></td>").appendTo($tr);
+		$tdTelefoonnummer = $("<td></td>").appendTo($tr);
+		$tdDatum = $("<td></td>").appendTo($tr);
+		$tdPrijs.append(inputData[i]["price"]);
+		$tdNaam.append(inputData[i]["name"]);
+		$tdTelefoonnummer.append(inputData[i]["telephone"]);
+		$tdDatum.append(inputData[i]["time"]);
+	}
 }
 
 function generateControlPanel(inputData) {
