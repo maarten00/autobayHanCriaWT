@@ -99,6 +99,12 @@ nav {
 	display:none;
 }
 
+#reserveCarDiv{
+	width: 263px;
+	margin-top: 15px;
+	float:left;
+}
+
 footer{
 	width: 1000px;
 	clear: left;

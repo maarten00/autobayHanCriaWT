@@ -166,6 +166,23 @@ function getCarReservationsResponse() {
 	}
 }
 
+function postCarReservationReq() {
+	postCarReservation = getXmlHttpRequestObject();
+	if(postCarReservation.readyState == 4 || postCarReservation.readyState == 0) {
+		var params = "method=postReservation";
+		postCarReservation.open("POST", 'backend/postReservation.php?' + params, true);
+		postCarReservation.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		postCarReservation.onreadystatechange = postCarReservationResponse
+		postCarReservation.send(null);
+	}
+}
+
+function postCarReservationResponse() {
+	if(postCarReservation.readyState == 4) {
+		
+	}
+}
+
 function generateSelectBox(inputData, type) {
 	if(type == "brand") {
 		$("#brandSelector").remove();
@@ -223,14 +240,30 @@ function generateCarView(inputData) {
 		$carViewer.append($carImg);
 		if(loginValue == "1") {
 			getCarReservationsRequest(inputData[i]["id"]);
+		} else {
+			generateCarReserveForm();
 		}
 	}
+}
 
+function generateCarReserveForm() {
+	$reserveCarDiv = $('<fieldset id="reserveCarDiv"><legend>Auto reserveren</legend>');
+	$carViewer.append($reserveCarDiv);
+	$form = $reserveCarDiv.append('<form id="reserveCar" action="/backend/postReservation.php" method="post">')
+	$priceInput = $form.append('Prijs: <input name="price" type="number" placeholder="€"><br />');
+	$nameInput = $form.append('Naam: <input name="name" type="text" placeholder="Naam"><br />');
+	$telephoneInput = $form.append('Telefoonnummer:<input name="telephone" type="tel" placeholder="1234-123456">');
+	$submitBtn = $('<input type="submit" value="Plaats Reservering">');
+	$form.append($submitBtn);
+	$submitBtn.click(function() {
+		$form.submit();
+		postCarReservationReq();
+	})
 }
 
 function generateCarReservationsTable(inputData) {
 	$carViewer = $('.carViewer');
-	$carReservationsTable = $('<table id="carReservationsTable"><th>Prijs</th><th>Naam</th><th>Telefoonnummer</th><th>Tijd En Datum</th></table>');
+	$carReservationsTable = $('<table id="carReservationsTable"><th>Prijs</th><th>Naam</th><th>Telefoonnummer</th>' + '<th>Tijd En Datum</th></table>');
 	$carReservationsTable.appendTo($carViewer);
 	for(i in inputData) {
 		$tr = $("<tr id='" + inputData[i]["carId"] + "'></tr>").appendTo($carReservationsTable);
