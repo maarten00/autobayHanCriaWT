@@ -53,23 +53,32 @@ if (isset($_SESSION["myusername"])) {
 			</div>
 		</div>
 		<p class="homeText">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non neque felis.
-			Maecenas libero odio, dictum at vulputate eu, pellentesque et leo.
-			In et arcu nulla. Integer sollicitudin lacus ac ante eleifend ac vehicula nibh tempus.
-			Maecenas ut tincidunt odio. Class aptent taciti sociosqu ad litora torquent per conubia nostra,
-			per inceptos himenaeos. Sed aliquam congue malesuada. Duis aliquam mollis leo,
-			sed cursus felis faucibus at. Maecenas sed leo nisi. Nulla facilisi.
-			Maecenas vulputate, massa non bibendum accumsan, lectus velit tincidunt tortor, a porta elit dolor ac urna.
+			Welkom op Autobay. 
+			Bij alle auto's vindt u de auto's die op dit moment te koop zijn. Bij interesse is het mogelijk om
+			een auto te reserveren. <br />
+			Bij het reserveren is het de bedoeling dat u contactgevens en een prijs achterlaat.
+			Wij zullen daarna contact met u opnemen. 
 		</p>
 		<div class="carSelector"></div>
 		<div class="allCars">
 			<table id="carList">
-				<th>Merk</th>
-				<th>Type</th>
-				<th>Bouwjaar</th>
+				<tr>
+					<th>Merk</th>
+					<th>Type</th>
+					<th>Bouwjaar</th>
+				</tr>
 			</table>
 		</div>
-		<div class="carViewer"></div>
+		<div class="carViewer">
+			<?
+			if (checkLogin()) {
+				echo '<fieldset id=carReservations><legend>Reserveringen</legend>';
+				echo '<table id="carReservationsTable">';
+				echo '<th>Prijs</th><th>Naam</th><th>Telefoonnummer</th><th>Tijd En Datum</th>';
+				echo '</table></fieldset>';
+			}
+			?>
+		</div>
 		<div class="controlPanel">
 			<table id="reservationsTable">
 				<th>AutoId</th><th>Prijs</th><th>Naam</th><th>Telefoonnummer</th><th>Tijd En Datum</th>

@@ -65,7 +65,7 @@ nav {
 }
 .allCars {
 	display:none;
-	width: 300px;
+	width: 220px;
 	float: left;
 }
 
@@ -77,14 +77,13 @@ nav {
 	
 }
 .carViewer{
-	width: 695px;
+	width: 750px;
 	float: right;
 	display: none;
 }
 
 #carImg{
-	float: right;;
-	margin-right: 50px;
+	float: right;
 	height: 50%;
 	width: 50%;
 	max-width: 450px;
@@ -109,3 +108,10 @@ footer{
 	width: 1000px;
 	clear: left;
 }
+
+#reserveCarFieldSet{
+	margin-top: 135px;
+	clear: left;
+	width: 275px;
+}
+
