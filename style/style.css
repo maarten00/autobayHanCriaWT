@@ -110,8 +110,12 @@ footer{
 }
 
 #reserveCarFieldSet{
-	margin-top: 135px;
+	margin-top: 130px;
 	clear: left;
 	width: 275px;
 }
+
+ #carReservations{
+ 	margin-top: 130px;
+ }
 
