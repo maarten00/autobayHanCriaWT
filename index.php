@@ -66,7 +66,7 @@ if (isset($_SESSION["myusername"])) {
 		<div class="carSelector"></div>
 		<div class="allCars">
 			<table id="carList">
-				<tr>
+				<tr id='carListHeaders'>
 					<th>Merk</th>
 					<th>Type</th>
 					<th>Bouwjaar</th>

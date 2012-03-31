@@ -65,7 +65,7 @@ function goToCarSearch() {
 function goToAllCars() {
 	closeAllDivs();
 	$('.allCars').show();
-	getAllCarsRequest();
+	getAllCarsRequest('getAllCars');
 }
 
 function goToControlPanel() {
@@ -80,8 +80,9 @@ function goToReservations() {
 }
 
 function goToManageCars() {
+	closeAllDivs();
 	$('.manageCars').show();
-	getAllCarsRequest();
+	getAllCarsRequest('manageCars');
 	$('.allCars').show();
 }
 
@@ -127,20 +128,22 @@ function getModelsResponse() {
 	}
 }
 
-function getAllCarsRequest() {
+function getAllCarsRequest(method) {
 	getCars = getXmlHttpRequestObject();
 	if(getCars.readyState == 4 || getCars.readyState == 0) {
-		var params = "method=getAllCars";
+		var params = "method=" + method;
 		getCars.open("GET", 'backend/getCars.php?' + params, true);
-		getCars.onreadystatechange = getAllCarsResponse
+		getCars.onreadystatechange = function() {
+			getAllCarsResponse(method);
+		}
 		getCars.send(null);
 	}
 }
 
-function getAllCarsResponse() {
+function getAllCarsResponse(method) {
 	if(getCars.readyState == 4) {
 		var responseArray = eval("(" + getCars.responseText + ")");
-		generateCarList(responseArray);
+		generateCarList(responseArray, method);
 	}
 }
 
@@ -212,7 +215,7 @@ function postCarReservationResponse() {
 	if(postCarReservation.readyState == 4) {
 		$reserveForm = $('#reserveCarFieldSet');
 		$reserveForm.empty();
-		$reserveForm.append($('$<p>Uw reservering is geplaatst</p>'));
+		$reserveForm.append($('<p>Uw reservering is geplaatst</p>'));
 	}
 }
 
@@ -239,9 +242,7 @@ function postCarReservationDeleteResponse(reservationId) {
 function postNewCarRequest(brand, model, fuel, capacity, power, year, color, photo, price) {
 	postNewCar = getXmlHttpRequestObject();
 	if(postNewCar.readyState == 4 || postNewCar.readyState == 0) {
-		var params = "method=newCar&brand=" + brand + "&model=" + model + "&fuel=" + fuel + 
-		"&capacity=" + capacity + "&power=" + power + "&year=" + year + "&color=" + color + 
-		"&photo=" + photo + "&price=" + price + "";
+		var params = "method=newCar&brand=" + brand + "&model=" + model + "&fuel=" + fuel + "&capacity=" + capacity + "&power=" + power + "&year=" + year + "&color=" + color + "&photo=" + photo + "&price=" + price + "";
 		postNewCar.open("POST", 'backend/postCar.php?', true);
 		postNewCar.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		postNewCar.onreadystatechange = postNewCarResponse()
@@ -250,7 +251,30 @@ function postNewCarRequest(brand, model, fuel, capacity, power, year, color, pho
 }
 
 function postNewCarResponse() {
+	if(postNewCarRequest.readyState == 4) {
+		$newCar = $('.newCar');
+		$newCar.empty();
+		$newCar.append($('<p>De auto is geplaatst</p>'));
+	}
+}
 
+function postCarDeleteRequest(carId) {
+	postCarDelete = getXmlHttpRequestObject();
+	if(postCarDelete.readyState == 4 || postCarDelete.readyState == 0) {
+		var params = "method=carDelete&carId=" + carId;
+		postCarDelete.open("POST", 'backend/postCar.php?', true);
+		postCarDelete.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		postCarDelete.onreadystatechange = function(){
+			postCarDeleteResponse(carId);
+		}
+		postCarDelete.send(params);
+	}
+}
+
+function postCarDeleteResponse(carId) {
+	if(postCarDelete.readyState == 4){
+		$('#carId' + carId).remove();
+	}
 }
 
 function validateReservation(price, name, telephone, carId) {
@@ -329,8 +353,10 @@ function generateSelectBox(inputData, type) {
 	}
 }
 
-function generateCarList(inputData) {
+function generateCarList(inputData, method) {
 	$('#carList').find("tr:gt(0)").remove();
+	if(method == "manageCars")
+		$('#carListHeaders').append($('<th>status</th>'));
 	for(i in inputData) {
 		$tr = $("<tr id='carId" + inputData[i]["id"] + "'></tr>").appendTo($('#carList'));
 		$tdMerk = $("<td></td>").appendTo($tr);
@@ -339,9 +365,19 @@ function generateCarList(inputData) {
 		$tdMerk.append(inputData[i]["merk"]);
 		$tdType.append(inputData[i]["type"]);
 		$tdBouwjaar.append(inputData[i]["bouwjaar"]);
-		$tr.click(function() {
-			getCarRequest(this.id.slice(5), "customer");
-		})
+		if(method == "getAllCars") {
+			$tr.click(function() {
+				getCarRequest(this.id.slice(5), "customer");
+			})
+		} else if(method == "manageCars") {
+			$tdStatus = $("<td></td>").appendTo($tr);
+			$tdStatus.append(inputData[i]["status"]);
+			$tdDeleteBtn = $("<td id=carId" + inputData[i]["id"] + "><img src='images/delete.gif' alt='delete'></td>")
+			$tdDeleteBtn.appendTo($tr);
+			$tdDeleteBtn.click(function() {
+				postCarDeleteRequest(this.id.slice(5));
+			})
+		}
 	}
 }
 

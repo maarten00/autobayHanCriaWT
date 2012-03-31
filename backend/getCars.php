@@ -22,6 +22,15 @@ if ($_REQUEST["method"] == "getModels") {
 }
 
 if ($_REQUEST["method"] == "getAllCars") {
+	if ($result = $mysqli -> query("SELECT * FROM autos WHERE status !='verkocht' ORDER BY Merk")) {
+		while ($row = $result -> fetch_assoc()) {
+			$jsonresult[] = $row;
+		}
+		$result -> free();
+	}
+}
+
+if ($_REQUEST["method"] == "manageCars") {
 	if ($result = $mysqli -> query("SELECT * FROM autos ORDER BY Merk")) {
 		while ($row = $result -> fetch_assoc()) {
 			$jsonresult[] = $row;

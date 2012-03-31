@@ -19,8 +19,8 @@ VALUES ( '$brand', '$model', '$fuel', '$capacity', '$power', '$year', '$color', 
 }
 
 if ($_POST["method"] == "carDelete") {
-	//$carId = $_POST["reservationId"];
-	$query = $mysqli -> query("DELETE FROM autos WHERE id='29'");
+	$carId = $_POST["carId"];
+	$query = $mysqli -> query("DELETE FROM autos WHERE id='$carId'");
 	mysqli_query($link, $query);
 }
 ?>
