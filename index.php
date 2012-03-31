@@ -31,8 +31,8 @@ if (isset($_SESSION["myusername"])) {
 		</header>
 		<nav>
 			<a id="homeBtn">Home</a>
-			<a id=allCarsBtn>Alle Auto's</a>
-			<a id=carSelectBtn>Zoeken</a>
+			<a id="allCarsBtn">Alle Auto's</a>
+			<a id="carSelectBtn">Zoeken</a>
 			<?
 			if (!checkLogin()) {
 				echo ' <a id="loginBtn">Inloggen</a>';
@@ -40,6 +40,11 @@ if (isset($_SESSION["myusername"])) {
 				echo ' <a id="controlPanelBtn">Beheerderspaneel</a>';
 			}
 			?>
+		</nav>
+		<nav id="controlPanel">
+			<a id='manageCarsBtn'>Auto's beheren</a>
+			<a id='reservationsBtn'>Reserveringen</a>
+			<a id='newCarBtn'>Auto toevoegen</a>
 		</nav>
 		<div id="content">
 			<div class='login-form'>
@@ -78,10 +83,22 @@ if (isset($_SESSION["myusername"])) {
 			}
 			?>
 		</div>
-		<div class="controlPanel">
+		<div class="reservations">
 			<table id="reservationsTable">
 				<th>AutoId</th><th>Prijs</th><th>Naam</th><th>Telefoonnummer</th><th>Tijd En Datum</th>
 			</table>
+		</div>
+		<div class="newCar">
+			<input type="text" id="newBrand" placeholder="Merk" />
+			<input type="text" id="newModel" placeholder="Model" />
+			<input type="text" id="newFuel" placeholder="Brandstof" />
+			<input type="number" id="newCapacity" placeholder="Motorinhoud" />
+			<input type="number" id="newPower" placeholder="Vermogen" />
+			<input type="number" id="newYear" placeholder="bouwjaar" />
+			<input type="text" id="newColor" placeholder="Kleur" />
+			<input type="text" id="newPhoto" placeholder="Foto URL" />
+			<input type="number" id="newPrice" placeholder="Vraagprijs" />
+			<input type="submit" id="newCarSubmit">
 		</div>
 		<footer>
 			<p>

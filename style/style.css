@@ -64,58 +64,58 @@ nav {
 	border: 1px dotted black;
 }
 .allCars {
-	display:none;
+	display: none;
 	width: 220px;
 	float: left;
 }
-
 .allCars tr:hover {
 	background-color: white;
 }
+.carList {
 
-.carList{
-	
 }
-.carViewer{
+.carViewer {
 	width: 750px;
 	float: right;
 	display: none;
 }
-
-#carImg{
+#controlPanel {
+	display: none;
+	margin-left: 196px;
+}
+#carImg {
 	float: right;
 	height: 50%;
 	width: 50%;
 	max-width: 450px;
 }
-
-#carDetails{
+#carDetails {
 	width: 250px;
 	float: left;
 }
-
-.controlPanel{
-	display:none;
+.controlPanel {
+	display: none;
 }
-
-#reserveCarDiv{
+#reserveCarDiv {
 	width: 263px;
 	margin-top: 15px;
-	float:left;
+	float: left;
 }
-
-footer{
+footer {
 	width: 1000px;
 	clear: left;
 }
-
-#reserveCarFieldSet{
+#reserveCarFieldSet {
 	margin-top: 130px;
 	clear: left;
 	width: 275px;
 }
-
- #carReservations{
- 	margin-top: 130px;
- }
-
+#carReservations {
+	margin-top: 130px;
+}
+.reservations {
+	display: none;
+}
+.newCar {
+	display: none;
+}

@@ -29,6 +29,15 @@ function attachHandlers() {
 	$("#controlPanelBtn").click(function() {
 		goToControlPanel();
 	})
+	$("#reservationsBtn").click(function() {
+		goToReservations();
+	})
+	$("#manageCarsBtn").click(function() {
+		goToManageCars();
+	})
+	$("#newCarBtn").click(function() {
+		goToNewCar();
+	})
 	loginValue = document.getElementById("loginValue").value;
 }
 
@@ -37,7 +46,8 @@ function closeAllDivs() {
 	$('.allCars').hide();
 	$('.carViewer').hide();
 	$('.homeText').hide();
-	$('.controlPanel').hide();
+	$('.reservations').hide();
+	$('.newCar').hide();
 }
 
 function goToHomePage() {
@@ -60,8 +70,27 @@ function goToAllCars() {
 
 function goToControlPanel() {
 	closeAllDivs();
-	$('.controlPanel').show();
+	$('#controlPanel').slideToggle('fast');
+}
+
+function goToReservations() {
+	closeAllDivs();
+	$('.reservations').show();
 	getAllReservationsRequest();
+}
+
+function goToManageCars() {
+	$('.manageCars').show();
+	getAllCarsRequest();
+	$('.allCars').show();
+}
+
+function goToNewCar() {
+	closeAllDivs();
+	$('.newCar').show();
+	$('#newCarSubmit').click(function() {
+		validateNewCar($('#newBrand').val(), $('#newModel').val(), $('#newFuel').val(), $('#newCapacity').val(), $('#newPower').val(), $('#newYear').val(), $('#newColor').val(), $('#newPhoto').val(), $('#newPrice').val());
+	})
 }
 
 function getBrandsRequest() {
@@ -207,6 +236,23 @@ function postCarReservationDeleteResponse(reservationId) {
 	}
 }
 
+function postNewCarRequest(brand, model, fuel, capacity, power, year, color, photo, price) {
+	postNewCar = getXmlHttpRequestObject();
+	if(postNewCar.readyState == 4 || postNewCar.readyState == 0) {
+		var params = "method=newCar&brand=" + brand + "&model=" + model + "&fuel=" + fuel + 
+		"&capacity=" + capacity + "&power=" + power + "&year=" + year + "&color=" + color + 
+		"&photo=" + photo + "&price=" + price + "";
+		postNewCar.open("POST", 'backend/postCar.php?', true);
+		postNewCar.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		postNewCar.onreadystatechange = postNewCarResponse()
+		postNewCar.send(params);
+	}
+}
+
+function postNewCarResponse() {
+
+}
+
 function validateReservation(price, name, telephone, carId) {
 	if(price == "" || price == null) {
 		alert("Geen prijs ingevuld!");
@@ -216,6 +262,30 @@ function validateReservation(price, name, telephone, carId) {
 		alert("Geen telefoonnummer ingevuld!");
 	} else {
 		postCarReservationReq(price, name, telephone, carId);
+	}
+}
+
+function validateNewCar(brand, model, fuel, capacity, power, year, color, photo, price) {
+	if(brand == "" || brand == null) {
+		alert("Geen merk ingevuld!");
+	} else if(model == "" || model == null) {
+		alert("Geen model ingevuld!");
+	} else if(fuel == "" || fuel == null) {
+		alert("Geen brandstof ingevuld!");
+	} else if(capacity == "" || capacity == null) {
+		alert("Geen motorinhoud ingevuld!");
+	} else if(power == "" || power == null) {
+		alert("Geen vermogen ingevuld!");
+	} else if(year == "" || year == null) {
+		alert("Geen bouwjaar ingevuld!");
+	} else if(color == "" || color == null) {
+		alert("Geen kleur ingevuld!");
+	} else if(photo == "" || photo == null) {
+		alert("Geen foto ingevuld!");
+	} else if(price == "" || price == null) {
+		alert("Geen prijs ingevuld!");
+	} else {
+		postNewCarRequest(brand, model, fuel, capacity, power, year, color, photo, price);
 	}
 }
 
@@ -287,7 +357,9 @@ function generateCarView(inputData, method) {
 		$carDetails.append("Merk: " + inputData[i]["merk"] + "<br />Type: " + inputData[i]["type"] + "<br />");
 		$carDetails.append("Brandstofsoort: " + inputData[i]["brandstof"] + "<br />");
 		$carDetails.append("Motorinhoud: " + inputData[i]["motorinhoud"] + "CC<br />");
+		$carDetails.append("Vermogen: " + inputData[i]["vermogen"] + "PK <br />");
 		$carDetails.append("Bouwjaar: " + inputData[i]["bouwjaar"] + "<br />Kleur: " + inputData[i]["kleur"] + "<br />");
+		$carDetails.append("Vraagprijs: €" + inputData[i]["vraagprijs"])
 		if(method != "controlPanel") {
 			$carImg = $("<img id='carImg' src='images/autos/auto" + inputData[i]["id"] + ".jpg' alt='carImg'/>");
 			$carImg.insertBefore($('#carReservations'));
