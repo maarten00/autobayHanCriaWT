@@ -179,7 +179,7 @@ function getAllReservationsRequest() {
 function getAllReservationsResponse() {
 	if(getAllReservations.readyState == 4) {
 		var responseArray = eval("(" + getAllReservations.responseText + ")");
-		generateControlPanel(responseArray);
+		generateAllReservationsTable(responseArray);
 	}
 }
 
@@ -264,7 +264,7 @@ function postCarDeleteRequest(carId) {
 		var params = "method=carDelete&carId=" + carId;
 		postCarDelete.open("POST", 'backend/postCar.php?', true);
 		postCarDelete.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		postCarDelete.onreadystatechange = function(){
+		postCarDelete.onreadystatechange = function() {
 			postCarDeleteResponse(carId);
 		}
 		postCarDelete.send(params);
@@ -272,8 +272,27 @@ function postCarDeleteRequest(carId) {
 }
 
 function postCarDeleteResponse(carId) {
-	if(postCarDelete.readyState == 4){
+	if(postCarDelete.readyState == 4) {
 		$('#carId' + carId).remove();
+	}
+}
+
+function postCarSoldRequest(carId) {
+	postCarSold = getXmlHttpRequestObject();
+	if(postCarSold.readyState == 4 || postCarSold.readyState == 0) {
+		var params = "method=carSold&carId=" + carId;
+		postCarSold.open("POST", 'backend/postCar.php?', true);
+		postCarSold.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		postCarSold.onreadystatechange = function() {
+			postCarSoldResponse(carId);
+		}
+		postCarSold.send(params);
+	}
+}
+
+function postCarSoldResponse(carId) {
+	if(postCarSold.readyState == 4) {
+		$('#status' + carId).text("verkocht");
 	}
 }
 
@@ -370,12 +389,15 @@ function generateCarList(inputData, method) {
 				getCarRequest(this.id.slice(5), "customer");
 			})
 		} else if(method == "manageCars") {
-			$tdStatus = $("<td></td>").appendTo($tr);
+			$tdStatus = $("<td id=status" + inputData[i]["id"] + "></td>").appendTo($tr);
 			$tdStatus.append(inputData[i]["status"]);
-			$tdDeleteBtn = $("<td id=carId" + inputData[i]["id"] + "><img src='images/delete.gif' alt='delete'></td>")
-			$tdDeleteBtn.appendTo($tr);
+			$tdDeleteBtn = $("<td id=carId" + inputData[i]["id"] + "><img src='images/delete.gif' alt='delete'></td>").appendTo($tr);
+			$tdSoldBtn = $("<td id=carId" + inputData[i]["id"] + "><img src='images/sold.png' alt='sold'></td>").appendTo($tr);
 			$tdDeleteBtn.click(function() {
 				postCarDeleteRequest(this.id.slice(5));
+			})
+			$tdSoldBtn.click(function() {
+				postCarSoldRequest(this.id.slice(5));
 			})
 		}
 	}
@@ -438,7 +460,7 @@ function generateCarReservationsTable(inputData) {
 	}
 }
 
-function generateControlPanel(inputData) {
+function generateAllReservationsTable(inputData) {
 	$('#reservationsTable').find("tr:gt(0)").remove();
 	for(i in inputData) {
 		$tr = $("<tr></tr>").appendTo($('#reservationsTable'));

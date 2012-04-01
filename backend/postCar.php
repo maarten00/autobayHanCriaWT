@@ -14,13 +14,19 @@ if ($_POST["method"] == "newCar") {
 
 	$query = $mysqli -> query("INSERT INTO autos(`merk`, `type`, `brandstof`, `motorinhoud`, `vermogen`, 
 	`bouwjaar`, `kleur`, `fotoURL`, `vraagprijs`, `status`) 
-VALUES ( '$brand', '$model', '$fuel', '$capacity', '$power', '$year', '$color', '$photo', '$price', 'Aangeboden')");
+VALUES ( '$brand', '$model', '$fuel', '$capacity', '$power', '$year', '$color', '$photo', '$price', 'aangeboden')");
 	mysqli_query($link, $query);
 }
 
 if ($_POST["method"] == "carDelete") {
 	$carId = $_POST["carId"];
 	$query = $mysqli -> query("DELETE FROM autos WHERE id='$carId'");
+	mysqli_query($link, $query);
+}
+
+if ($_POST["method"] == "carSold") {
+	$carId = $_POST["carId"];
+	$query = $mysqli -> query("UPDATE autos SET status='verkocht' WHERE id='$carId'");
 	mysqli_query($link, $query);
 }
 ?>
