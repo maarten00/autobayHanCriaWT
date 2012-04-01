@@ -13,8 +13,8 @@ if ($_POST["method"] == "newCar") {
 	$price = $_POST["price"];
 
 	$query = $mysqli -> query("INSERT INTO autos(`merk`, `type`, `brandstof`, `motorinhoud`, `vermogen`, 
-	`bouwjaar`, `kleur`, `fotoURL`, `vraagprijs`) 
-VALUES ( '$brand', '$model', '$fuel', '$capacity', '$power', '$year', '$color', '$photo', '$price')");
+	`bouwjaar`, `kleur`, `fotoURL`, `vraagprijs`, `status`) 
+VALUES ( '$brand', '$model', '$fuel', '$capacity', '$power', '$year', '$color', '$photo', '$price', 'Aangeboden')");
 	mysqli_query($link, $query);
 }
 

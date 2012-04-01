@@ -245,13 +245,13 @@ function postNewCarRequest(brand, model, fuel, capacity, power, year, color, pho
 		var params = "method=newCar&brand=" + brand + "&model=" + model + "&fuel=" + fuel + "&capacity=" + capacity + "&power=" + power + "&year=" + year + "&color=" + color + "&photo=" + photo + "&price=" + price + "";
 		postNewCar.open("POST", 'backend/postCar.php?', true);
 		postNewCar.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		postNewCar.onreadystatechange = postNewCarResponse()
+		postNewCar.onreadystatechange = postNewCarResponse
 		postNewCar.send(params);
 	}
 }
 
 function postNewCarResponse() {
-	if(postNewCarRequest.readyState == 4) {
+	if(postNewCar.readyState == 4) {
 		$newCar = $('.newCar');
 		$newCar.empty();
 		$newCar.append($('<p>De auto is geplaatst</p>'));
