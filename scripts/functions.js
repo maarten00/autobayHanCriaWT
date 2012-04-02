@@ -26,7 +26,7 @@ function attachHandlers() {
 		goToCarSearch();
 	});
 	$("#allCarsBtn").click(function() {
-		window.history.pushState(goToAllCars(), null, 'allcars');
+		window.history.pushState('goToAllCars()', null, 'allcars');
 		goToAllCars();
 	})
 	$("#controlPanelBtn").click(function() {
