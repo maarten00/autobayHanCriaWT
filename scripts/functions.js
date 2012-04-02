@@ -15,28 +15,37 @@ function getXmlHttpRequestObject() {
 
 function attachHandlers() {
 	$("#homeBtn").click(function() {
+		window.history.pushState(goToHomePage(), null, 'home');
 		goToHomePage();
 	});
 	$("#loginBtn").click(function() {
 		$('.login-form').slideToggle('slow');
 	});
 	$("#carSelectBtn").click(function() {
+		window.history.pushState(goToCarSearch(), null, 'search');
 		goToCarSearch();
 	});
 	$("#allCarsBtn").click(function() {
+		window.history.pushState(goToAllCars(), null, 'allcars');
 		goToAllCars();
 	})
 	$("#controlPanelBtn").click(function() {
 		goToControlPanel();
 	})
 	$("#reservationsBtn").click(function() {
+		window.history.pushState(goToReservations(), null, 'allReservations');
 		goToReservations();
 	})
 	$("#manageCarsBtn").click(function() {
+		window.history.pushState(goToManageCars(), null, 'manageCars');
 		goToManageCars();
 	})
 	$("#newCarBtn").click(function() {
+		window.history.pushState(goToNewCar(), null, 'newCar');
 		goToNewCar();
+	})
+	window.addEventListener("popstate", function(e) {
+		//get history.state en voer uit
 	})
 	loginValue = document.getElementById("loginValue").value;
 }
