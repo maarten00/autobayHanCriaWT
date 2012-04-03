@@ -15,37 +15,48 @@ function getXmlHttpRequestObject() {
 
 function attachHandlers() {
 	$("#homeBtn").click(function() {
-		window.history.pushState(goToHomePage(), null, 'home');
+		window.history.pushState('home', null, 'home');
 		goToHomePage();
 	});
 	$("#loginBtn").click(function() {
 		$('.login-form').slideToggle('slow');
 	});
 	$("#carSelectBtn").click(function() {
-		window.history.pushState(goToCarSearch(), null, 'search');
+		window.history.pushState('search', null, 'search');
 		goToCarSearch();
 	});
 	$("#allCarsBtn").click(function() {
-		window.history.pushState('goToAllCars()', null, 'allcars');
+		window.history.pushState('allCars', null, 'allcars');
 		goToAllCars();
 	})
 	$("#controlPanelBtn").click(function() {
 		goToControlPanel();
 	})
 	$("#reservationsBtn").click(function() {
-		window.history.pushState(goToReservations(), null, 'allReservations');
+		window.history.pushState('reservations', null, 'allReservations');
 		goToReservations();
 	})
 	$("#manageCarsBtn").click(function() {
-		window.history.pushState(goToManageCars(), null, 'manageCars');
+		window.history.pushState('manageCars', null, 'manageCars');
 		goToManageCars();
 	})
 	$("#newCarBtn").click(function() {
-		window.history.pushState(goToNewCar(), null, 'newCar');
+		window.history.pushState('newCar', null, 'newCar');
 		goToNewCar();
 	})
 	window.addEventListener("popstate", function(e) {
-		//get history.state en voer uit
+		if(history.state == "allCars")
+			history.back(goToAllCars());
+		if(history.state == "Search")
+			history.back(goToCarSearch());
+		if(history.state == "reservations")
+			history.back(goToReservations());
+		if(history.state == "home")
+			history.back(goToHomePage());
+		if(history.state == "manageCars")
+			history.back(goToManageCars())
+		if(history.state == "newCar")
+			goToNewCar();
 	})
 	loginValue = document.getElementById("loginValue").value;
 }
