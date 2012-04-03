@@ -13,11 +13,33 @@ if ($_REQUEST["method"] == "getBrands") {
 
 if ($_REQUEST["method"] == "getModels") {
 	$brand = $_REQUEST["brand"];
-	if ($result = $mysqli -> query("SELECT DISTINCT Type FROM autos WHERE Merk='$brand'")) {
+	if ($result = $mysqli -> query("SELECT DISTINCT Type FROM autos WHERE Merk='$brand' and status !='verkocht'")) {
 		while ($row = $result -> fetch_assoc()) {
 			$jsonresult[] = $row;
 		}
 		$result -> free();
+	}
+}
+
+if ($_REQUEST["method"] == "carSearch"){
+	$brand = $_REQUEST["brand"];
+	if(isset($_REQUEST["model"])){
+		$model = $_REQUEST["model"];
+	}
+	if(isset($model) == false){
+		if ($result = $mysqli -> query("SELECT * FROM autos WHERE Merk='$brand' and status !='verkocht'")) {
+			while ($row = $result -> fetch_assoc()) {
+				$jsonresult[] = $row;
+			}
+			$result -> free();
+		}
+	}else if(isset($model)){
+		if ($result = $mysqli -> query("SELECT * FROM autos WHERE Merk='$brand' and Type='$model' and status !='verkocht'")) {
+			while ($row = $result -> fetch_assoc()) {
+				$jsonresult[] = $row;
+			}
+			$result -> free();
+		}
 	}
 }
 

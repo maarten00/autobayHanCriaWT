@@ -221,6 +221,27 @@ function getCarReservationsResponse() {
 	}
 }
 
+function getCarSearchRequest(brand, model) {
+	if(brand != "-") {
+		getCarSearch = getXmlHttpRequestObject();
+		if(getCarSearch.readyState == 4 || getCarSearch.readyState == 0) {
+			var params = "method=carSearch&brand=" + brand;
+			if(model != "-")
+				params += "&model=" + model;
+			getCarSearch.open("GET", 'backend/getCars.php?' + params, true);
+			getCarSearch.onreadystatechange = getCarSearchResponse
+			getCarSearch.send(null);
+		}
+	}
+}
+
+function getCarSearchResponse() {
+	if(getCarSearch.readyState == 4) {
+		var responseArray = eval("(" + getCarSearch.responseText + ")");
+		generateCarList(responseArray, "getAllCars");
+	}
+}
+
 function postCarReservationReq(price, name, telephone, carId) {
 	postCarReservation = getXmlHttpRequestObject();
 	if(postCarReservation.readyState == 4 || postCarReservation.readyState == 0) {
@@ -369,21 +390,25 @@ function generateCarReservationForm() {
 
 function generateSelectBox(inputData, type) {
 	if(type == "brand") {
-		$("#brandSelector").remove();
+		$(".carSelector").empty();
 		var brandList = $('<select id="brandSelector"></select>');
 		brandList.appendTo($('.carSelector'));
 		brandList.append('<option value="-">Selecteer Merk</option>');
+		var submit = $('<br /><input id="searchSubmit" type="submit" value="Zoeken"/>').appendTo($('.carSelector'));
 		for(i in inputData) {
 			brandList.append('<option value="' + inputData[i]["Merk"] + '">' + inputData[i]["Merk"] + '</option>');
 		}
 		$("#brandSelector").change(function() {
 			getModelsRequest($("#brandSelector").val());
 		});
+		$("#searchSubmit").click(function() {
+			getCarSearchRequest($('#brandSelector').val(), $('#modelSelector').val());
+		});
 	}
 	if(type == "models") {
 		$("#modelSelector").remove();
 		var modelList = $('<select id="modelSelector"></select>');
-		modelList.appendTo($('.carSelector'));
+		modelList.insertBefore($('#searchSubmit'));
 		modelList.append('<option value="-">Selecteer Model</option>');
 		for(i in inputData) {
 			modelList.append('<option value="' + inputData[i]["Type"] + '">' + inputData[i]["Type"] + '</option>');
@@ -393,6 +418,7 @@ function generateSelectBox(inputData, type) {
 
 function generateCarList(inputData, method) {
 	$('#carList').find("tr:gt(0)").remove();
+	$('.allCars').show();
 	if(method == "manageCars")
 		if(managed != 1) {
 			$('#carListHeaders').append($('<th id="statusTh">status</th>'));
