@@ -119,3 +119,8 @@ footer {
 .newCar {
 	display: none;
 }
+
+#newCarFieldset{
+	width: 160px;
+	margin: auto;
+}

@@ -2,6 +2,7 @@
  * @author Maarten Kuiper
  */
 var loginValue;
+var managed;
 
 function getXmlHttpRequestObject() {
 	if(window.XMLHttpRequest) {
@@ -110,7 +111,7 @@ function goToNewCar() {
 	closeAllDivs();
 	$('.newCar').show();
 	$('#newCarSubmit').click(function() {
-		validateNewCar($('#newBrand').val(), $('#newModel').val(), $('#newFuel').val(), $('#newCapacity').val(), $('#newPower').val(), $('#newYear').val(), $('#newColor').val(), $('#newPhoto').val(), $('#newPrice').val());
+		validateNewCar($('#newBrand').val(), $('#newModel').val(), $('#newFuel').val(), $('#newCapacity').val(), $('#newPower').val(), $('#newYear').val(), $('#newColor').val(), $('#newPrice').val());
 	})
 }
 
@@ -259,10 +260,10 @@ function postCarReservationDeleteResponse(reservationId) {
 	}
 }
 
-function postNewCarRequest(brand, model, fuel, capacity, power, year, color, photo, price) {
+function postNewCarRequest(brand, model, fuel, capacity, power, year, color, price) {
 	postNewCar = getXmlHttpRequestObject();
 	if(postNewCar.readyState == 4 || postNewCar.readyState == 0) {
-		var params = "method=newCar&brand=" + brand + "&model=" + model + "&fuel=" + fuel + "&capacity=" + capacity + "&power=" + power + "&year=" + year + "&color=" + color + "&photo=" + photo + "&price=" + price + "";
+		var params = "method=newCar&brand=" + brand + "&model=" + model + "&fuel=" + fuel + "&capacity=" + capacity + "&power=" + power + "&year=" + year + "&color=" + color + "&price=" + price + "";
 		postNewCar.open("POST", 'backend/postCar.php?', true);
 		postNewCar.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		postNewCar.onreadystatechange = postNewCarResponse
@@ -328,7 +329,7 @@ function validateReservation(price, name, telephone, carId) {
 	}
 }
 
-function validateNewCar(brand, model, fuel, capacity, power, year, color, photo, price) {
+function validateNewCar(brand, model, fuel, capacity, power, year, color, price) {
 	if(brand == "" || brand == null) {
 		alert("Geen merk ingevuld!");
 	} else if(model == "" || model == null) {
@@ -343,16 +344,14 @@ function validateNewCar(brand, model, fuel, capacity, power, year, color, photo,
 		alert("Geen bouwjaar ingevuld!");
 	} else if(color == "" || color == null) {
 		alert("Geen kleur ingevuld!");
-	} else if(photo == "" || photo == null) {
-		alert("Geen foto ingevuld!");
 	} else if(price == "" || price == null) {
 		alert("Geen prijs ingevuld!");
 	} else {
-		postNewCarRequest(brand, model, fuel, capacity, power, year, color, photo, price);
+		postNewCarRequest(brand, model, fuel, capacity, power, year, color, price);
 	}
 }
 
-function generateCarReserveForm() {
+function generateCarReservationForm() {
 	$reserveCarFieldset = $('<fieldset id="reserveCarFieldSet"><legend>Auto reserveren</legend>');
 	$carViewer.append($reserveCarFieldset);
 	$form = $reserveCarFieldset.append('<form id="reserveCar" onsubmit="validateReservation(this)">')
@@ -395,8 +394,19 @@ function generateSelectBox(inputData, type) {
 function generateCarList(inputData, method) {
 	$('#carList').find("tr:gt(0)").remove();
 	if(method == "manageCars")
-		$('#carListHeaders').append($('<th>status</th>'));
+		if(managed != 1) {
+			$('#carListHeaders').append($('<th id="statusTh">status</th>'));
+			$('#carListHeaders').append($('<th id="idTh">Auto Id</th>'));
+			managed = 1;
+		}
 	for(i in inputData) {
+		if(method == "getAllCars") {
+			if(managed == 1) {
+				$('#statusTh').remove();
+				$('#idTh').remove();
+				managed = 0;
+			}
+		}
 		$tr = $("<tr id='carId" + inputData[i]["id"] + "'></tr>").appendTo($('#carList'));
 		$tdMerk = $("<td></td>").appendTo($tr);
 		$tdType = $("<td></td>").appendTo($tr);
@@ -411,6 +421,8 @@ function generateCarList(inputData, method) {
 		} else if(method == "manageCars") {
 			$tdStatus = $("<td id=status" + inputData[i]["id"] + "></td>").appendTo($tr);
 			$tdStatus.append(inputData[i]["status"]);
+			$tdId = $("<td></td>").appendTo($tr);
+			$tdId.append(inputData[i]["id"]);
 			$tdDeleteBtn = $("<td id=carId" + inputData[i]["id"] + "><img src='images/delete.gif' alt='delete'></td>").appendTo($tr);
 			$tdSoldBtn = $("<td id=carId" + inputData[i]["id"] + "><img src='images/sold.png' alt='sold'></td>").appendTo($tr);
 			$tdDeleteBtn.click(function() {
@@ -448,7 +460,7 @@ function generateCarView(inputData, method) {
 		} else {
 			$carViewer.append($carDetails);
 			$carViewer.append($carImg);
-			generateCarReserveForm();
+			generateCarReservationForm();
 
 		}
 	}

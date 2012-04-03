@@ -89,6 +89,7 @@ if (isset($_SESSION["myusername"])) {
 			</table>
 		</div>
 		<div class="newCar">
+			<fieldset id="newCarFieldset"><legend>Nieuwe auto toevoegen</legend>
 			<input type="text" id="newBrand" placeholder="Merk" />
 			<input type="text" id="newModel" placeholder="Model" />
 			<input type="text" id="newFuel" placeholder="Brandstof" />
@@ -96,9 +97,9 @@ if (isset($_SESSION["myusername"])) {
 			<input type="number" id="newPower" placeholder="Vermogen" />
 			<input type="number" id="newYear" placeholder="bouwjaar" />
 			<input type="text" id="newColor" placeholder="Kleur" />
-			<input type="text" id="newPhoto" placeholder="Foto URL" />
-			<input type="number" id="newPrice" placeholder="Vraagprijs" />
-			<input type="submit" id="newCarSubmit">
+			<input type="number" id="newPrice" placeholder="Vraagprijs" /><br />
+			<input type="submit" id="newCarSubmit" value="Voeg toe">
+			</fieldset>
 		</div>
 		<footer>
 			<p>

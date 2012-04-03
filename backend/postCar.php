@@ -9,12 +9,11 @@ if ($_POST["method"] == "newCar") {
 	$power = $_POST["power"];
 	$year = $_POST["year"];
 	$color = $_POST["color"];
-	$photo = $_POST["photo"];
 	$price = $_POST["price"];
 
 	$query = $mysqli -> query("INSERT INTO autos(`merk`, `type`, `brandstof`, `motorinhoud`, `vermogen`, 
-	`bouwjaar`, `kleur`, `fotoURL`, `vraagprijs`, `status`) 
-VALUES ( '$brand', '$model', '$fuel', '$capacity', '$power', '$year', '$color', '$photo', '$price', 'aangeboden')");
+	`bouwjaar`, `kleur`, `vraagprijs`, `status`) 
+VALUES ( '$brand', '$model', '$fuel', '$capacity', '$power', '$year', '$color', '$price', 'aangeboden')");
 	mysqli_query($link, $query);
 }
 
